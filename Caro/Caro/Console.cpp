@@ -60,13 +60,17 @@ int Checkboard(int pX, int pY) {
 	for (int i = 0; i < BOARD_SIZE; i++) {
 		for (int j = 0; j < BOARD_SIZE; j++) {
 			if (_A[i][j].x == pX && _A[i][j].y == pY && _A[i][j].c == 0) {
-				if (TURN == true) _A[i][j].c = -1;
-				else _A[i][j].c = 1;
+				if (TURN == true) {
+					_A[i][j].c = -1; TURN = false;
+				}
+				else {
+					_A[i][j].c = 1; TURN = true;
+				};
 				return _A[i][j].c;
 			}
 		}
 	}
-	return 0;
+
 };
 
 void MoveRight() {
