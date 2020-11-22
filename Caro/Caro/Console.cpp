@@ -8,9 +8,10 @@ using namespace std;
 
 struct _POINT {
 	int x, y, c;
+	char q;
 } _A[BOARD_SIZE][BOARD_SIZE];
 bool TURN;
-char _COMMAND;
+char _COMMAND,check;
 int _X, _Y;
 
 void FixConsoleWindow() {
@@ -42,7 +43,7 @@ void Reset() {
 };
 
 void Draw(int pSize) {
-	for (int i = 0; i < pSize; i++) {
+	for (int i = 0; i <= pSize; i++) {
 		for (int j = 0; j <= pSize; j++) {
 			gotoxy(LEFT + 4 * i, TOP + 2 * j);
 			cout << ".";
@@ -52,29 +53,44 @@ void Draw(int pSize) {
 
 void starGame() {
 	system("cls");
-	Reset();
 	Draw(BOARD_SIZE);
+	Reset();
 };
+
+int ProcessFinish(int pWhoWin) {
+	gotoxy(0, _A[BOARD_SIZE - 1][BOARD_SIZE - 1].y + 2);
+	switch (pWhoWin)
+	{
+	case -1: cout << "asdadadasdadad"; break;
+	case 1: cout << "sadadadadadadad"; break;
+	case 0: cout << "adadasddadasd"; break;
+	case 2: TURN = !TURN;
+	}
+	gotoxy(_X, _Y);
+	return pWhoWin;
+}
+
 
 int Checkboard(int pX, int pY) {
 	for (int i = 0; i < BOARD_SIZE; i++) {
 		for (int j = 0; j < BOARD_SIZE; j++) {
 			if (_A[i][j].x == pX && _A[i][j].y == pY && _A[i][j].c == 0) {
 				if (TURN == true) {
-					_A[i][j].c = -1; TURN = false;
+					_A[i][j].c = -1;
 				}
 				else {
-					_A[i][j].c = 1; TURN = true;
+					_A[i][j].c = 1; 
 				};
 				return _A[i][j].c;
 			}
 		}
 	}
+	return 0;
 
 };
 
 void MoveRight() {
-	if (_X < _A[BOARD_SIZE - 1][BOARD_SIZE - 1].x) {
+	if (_X < _A[BOARD_SIZE-1 ][BOARD_SIZE -1].x) {
 		_X += 4;
 		gotoxy(_X, _Y);
 	}
@@ -88,7 +104,7 @@ void MoveLeft() {
 };
 
 void MoveDown() {
-	if (_Y < _A[BOARD_SIZE - 1][BOARD_SIZE - 1].y) {
+	if (_Y < _A[BOARD_SIZE-1 ][BOARD_SIZE-1 ].y) {
 		_Y+= 2;
 		gotoxy(_X, _Y);
 	}
@@ -101,10 +117,29 @@ void MoveUp() {
 	}
 };
 
+bool checkRow(int pX, int pY ) {
+	int count = 1;
+	bool t = false;
+	int x = pX;
+	while (((x - 4) >= _A[0][0].x) && (_A[x][pY].q = check)) {
+		count++;
+		x -= 4;
+
+	};
+	while (((x + 4) <= _A[BOARD_SIZE - 1][BOARD_SIZE - 1].x) && (_A[x][pY].q = check)) {
+		count++;
+		x += 4;
+	};
+	if (count == 5) t=true;
+	return t;
+};
+
+
 
 int main() {
 	FixConsoleWindow();
 	starGame();
+	bool validEnter = true;
 	while (1) {
 		_COMMAND = toupper(_getch());
 		if (_COMMAND == 27)
@@ -120,13 +155,15 @@ int main() {
 				switch ((Checkboard(_X, _Y)))
 				{
 				case -1:
+					check = 'X';
 					cout << "X"; break;
-				case 1:
+				case 1: 
+					check = 'O';
 					cout << "O"; break;
+				case 0: validEnter = false;
 				}
 			}
 		}
 	}
-	return 0;
 }
 
