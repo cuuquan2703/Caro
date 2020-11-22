@@ -40,9 +40,24 @@ void Reset() {
 	_Y = _A[0][0].y;
 };
 
+void Draw(int pSize) {
+	for (int i = 0; i < pSize; i++) {
+		for (int j = 0; j <= pSize; j++) {
+			gotoxy(LEFT + 4 * i, TOP + 2 * j);
+			cout << ".";
+		}
+	};
+};
+
+void starGame() {
+	system("cls");
+	Reset();
+	Draw(BOARD_SIZE);
+};
+
 int main() {
 	FixConsoleWindow();
-	gotoxy(20, 30);
+	statGame();
 	return 0;
 }
 
