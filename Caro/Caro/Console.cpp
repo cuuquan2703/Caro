@@ -8,8 +8,16 @@ void FixConsoleWindow() {
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 };
 
+void gotoxy(int x, int y) {
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+};
+
 int main() {
 	FixConsoleWindow();
+	gotoxy(20, 30);
 	return 0;
 }
 
