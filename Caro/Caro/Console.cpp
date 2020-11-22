@@ -13,6 +13,13 @@ struct _POINT {
 bool TURN;
 char _COMMAND,check;
 int _X, _Y;
+void resetdata() {
+	for (int i = 0; i <= BOARD_SIZE; i++) {
+		for (int j = 0; j <= BOARD_SIZE; j++) {
+			_A[i][j].q ='.';
+		}
+	}
+}
 
 void FixConsoleWindow() {
 	HWND consoleWindow = GetConsoleWindow();
@@ -116,8 +123,8 @@ void MoveUp() {
 		gotoxy(_X, _Y);
 	}
 };
+void checkRow(int pX, int pY ) {
 
-bool checkRow(int pX, int pY ) {
 	int count = 1;
 	bool t = false;
 	int x = pX;
@@ -131,20 +138,20 @@ bool checkRow(int pX, int pY ) {
 		x += 4;
 	};
 	if (count == 5) t=true;
-	return t;
+	if (t = true) cout << "win";
 };
-
 
 
 int main() {
 	FixConsoleWindow();
 	starGame();
+	resetdata();
 	bool validEnter = true;
 	while (1) {
 		_COMMAND = toupper(_getch());
 		if (_COMMAND == 27)
 		{
-			return 0;
+			break;
 		}
 		else {
 			if (_COMMAND == 'A') MoveLeft();
@@ -156,14 +163,29 @@ int main() {
 				{
 				case -1:
 					check = 'X';
-					cout << "X"; break;
+					cout << "X";
+					break;
 				case 1: 
 					check = 'O';
-					cout << "O"; break;
+					cout << "O";
+					break;
 				case 0: validEnter = false;
 				}
+				_A[(_Y - 5) / 4 + 1][_X / 2].q = check;
+			//	checkRow(_X, _Y);
 			}
 		}
 	}
+	cout << endl;
+	system("cls");
+	for (int i = 0; i <= BOARD_SIZE; i++) {
+		for (int j = 0; j <= BOARD_SIZE; j++)
+		{
+			
+			cout << _A[i][j].q << "    ";
+		}
+		cout << endl;
+	}
+	return 0;
 }
 
