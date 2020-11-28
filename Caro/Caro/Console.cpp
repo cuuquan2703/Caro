@@ -10,9 +10,10 @@ struct _POINT {
 	int x, y, c;
 	char q;
 } _A[BOARD_SIZE][BOARD_SIZE];
-bool TURN;
+bool TURN=TRUE;
 char _COMMAND,check;
 int _X, _Y;
+int p1 = 0, p2 = 0;
 void resetdata() {
 	for (int i = 0; i <= BOARD_SIZE; i++) {
 		for (int j = 0; j <= BOARD_SIZE; j++) {
@@ -47,6 +48,7 @@ void Reset() {
 	_COMMAND = -1;
 	_X = _A[0][0].x;
 	_Y = _A[0][0].y;
+	gotoxy(5, 2);
 };
 
 void Draw(int pSize) {
@@ -54,7 +56,7 @@ void Draw(int pSize) {
 		for (int j = 0; j <= pSize; j++) {
 			gotoxy(LEFT + 4 * i, TOP + 2 * j);
 			cout << ".";
-		}
+		};
 	};
 };
 
@@ -84,9 +86,11 @@ int Checkboard(int pX, int pY) {
 			if (_A[i][j].x == pX && _A[i][j].y == pY && _A[i][j].c == 0) {
 				if (TURN == true) {
 					_A[i][j].c = -1;
+					TURN = false;
 				}
 				else {
-					_A[i][j].c = 1; 
+					_A[i][j].c = 1;
+					TURN = true;
 				};
 				return _A[i][j].c;
 			}
@@ -138,11 +142,13 @@ void checkRow(int pX, int pY ) {
 		x += 4;
 	};
 	if (count == 5) t=true;
-	if (t = true) cout << "win";
+	if (t == true) cout << "win";
 };
 
 
 int main() {
+	HANDLE hConsoleColor;
+	hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
 	FixConsoleWindow();
 	starGame();
 	resetdata();
@@ -163,23 +169,33 @@ int main() {
 				{
 				case -1:
 					check = 'X';
+					SetConsoleTextAttribute(hConsoleColor, 14);
 					cout << "X";
 					break;
 				case 1: 
 					check = 'O';
+					SetConsoleTextAttribute(hConsoleColor, 12);
 					cout << "O";
 					break;
 				case 0: validEnter = false;
 				}
-				_A[(_Y - 5) / 4 + 1][_X / 2].q = check;
+				_A[(_Y - 2) / 2][(_X - 5) / 4].q = check;
+				gotoxy(80, 1);
+				for (int i = 0; i < BOARD_SIZE; i++) {
+					for (int j = 0; j < BOARD_SIZE; j++) {
+						if (_A[i][j].q == 'X') p1++;
+					}
+				}
+				SetConsoleTextAttribute(hConsoleColor, 14);
+				cout << "Player 1: " << p1;
 			//	checkRow(_X, _Y);
 			}
 		}
 	}
 	cout << endl;
 	system("cls");
-	for (int i = 0; i <= BOARD_SIZE; i++) {
-		for (int j = 0; j <= BOARD_SIZE; j++)
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int j = 0; j < BOARD_SIZE; j++)
 		{
 			
 			cout << _A[i][j].q << "    ";
