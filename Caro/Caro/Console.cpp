@@ -171,23 +171,23 @@ int main() {
 					check = 'X';
 					SetConsoleTextAttribute(hConsoleColor, 14);
 					cout << "X";
+					p1++;
 					break;
 				case 1: 
 					check = 'O';
 					SetConsoleTextAttribute(hConsoleColor, 12);
 					cout << "O";
+					p2++;
 					break;
 				case 0: validEnter = false;
 				}
 				_A[(_Y - 2) / 2][(_X - 5) / 4].q = check;
 				gotoxy(80, 1);
-				for (int i = 0; i < BOARD_SIZE; i++) {
-					for (int j = 0; j < BOARD_SIZE; j++) {
-						if (_A[i][j].q == 'X') p1++;
-					}
-				}
 				SetConsoleTextAttribute(hConsoleColor, 14);
-				cout << "Player 1: " << p1;
+				cout << "Player 1: " << p1-46;
+				gotoxy(80, 2);
+				SetConsoleTextAttribute(hConsoleColor, 12);
+				cout << "Player 2: " << p2;
 			//	checkRow(_X, _Y);
 			}
 		}
