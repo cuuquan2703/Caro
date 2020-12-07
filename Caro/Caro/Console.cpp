@@ -143,21 +143,58 @@ void Draw(int pSize)
 	for (int i = 0; i <= pSize; i++) {
 		for (int j = 0; j <= pSize; j++) {
 			gotoxy(LEFT + 4 * i, TOP + 2 * j);
-			cout << "+";
+			cout << "";
+		};
+	};
+	for (int i = 0; i <= pSize-1 ; i++) {
+		for (int j = 0; j <= pSize; j++) {
+			gotoxy((LEFT + 4 * i), (TOP + 2 * j)+1);
+			cout << "----";
 		};
 	};
 	for (int i = 0; i <= pSize-1; i++) {
-		for (int j = 0; j <= pSize; j++) {
-			gotoxy((LEFT + 4 * i)+1, (TOP + 2 * j));
-			cout << "___";
-		};
-	};
-	for (int i = 0; i <= pSize ; i++) {
 		for (int j = 0; j <= pSize-1; j++) {
-			gotoxy((LEFT + 4 * i), (TOP + 2 * j)+1);
+			gotoxy((LEFT + 4 * i)+2, (TOP + 2 * j)+1);
+			cout << "|";
+			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 2);
 			cout << "|";
 		};
 	};
+	SetConsoleTextAttribute(hConsoleColor, 10);
+	for (int i = 0; i <=2* pSize; i++)
+	{
+		gotoxy(51, TOP+i+1);
+		if ((i + 1) % 2 == 1)
+			cout << char(21);
+		else
+			cout << char(23);
+	};
+	for (int i = 0; i < 4 * pSize; i++)
+	{
+		gotoxy(LEFT + i , 26);
+		if (i % 2 == 0)
+			cout << char(29);
+		else
+			cout << char(3);
+	};
+	for (int i = 0; i < 2 * pSize; i++)
+	{
+		gotoxy(LEFT, TOP + i + 1);
+		if ((i + 1) % 2 == 1)
+			cout << char(21);
+		else
+			cout << char(23);
+	};
+	for (int i = 0; i < 4 * pSize; i++)
+	{
+		gotoxy(LEFT + i , TOP);
+		if (i % 2 == 0)
+			cout << char(5);
+		else
+			cout << char(127);
+
+	}
+
 };
 
 int Checkboard(int pX, int pY) 
