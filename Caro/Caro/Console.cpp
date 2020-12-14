@@ -10,7 +10,7 @@ using namespace std;
 HANDLE hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
 
 
-#define BOARD_SIZE 12
+#define BOARD_SIZE 13
 #define LEFT 3
 #define TOP 1
 
@@ -35,7 +35,8 @@ void ShowCur(bool CursorVisibility)
 	SetConsoleCursorInfo(handle, &ConCurInf);
 };
 void PrintCaro()
-{
+{	
+	SetConsoleTextAttribute(hConsoleColor, 12);
 	int x = 25, y = 0;
 	gotoxy(x, y);				   cout << "ooooooooooooo";
 	gotoxy(x - 3, y + 1);			cout << "oooooooooooooooo";
@@ -55,7 +56,7 @@ void PrintCaro()
 	
 	gotoxy(x - 3, y + 14);		cout << "oooooooooooooooo";
 	gotoxy(x, y + 15);			   cout << "ooooooooooooo";
-	
+	SetConsoleTextAttribute(hConsoleColor, 14);
 	gotoxy(x - 4 + 22, y + 4);				    cout << "ooooooooooo";
 	gotoxy(x - 4 + 22 - 2, y + 5);		      cout << "ooooooooooooooo";
 	gotoxy(x - 4 + 22 - 3, y + 6);		     cout << "ooooooooooooooooo";
@@ -71,7 +72,7 @@ void PrintCaro()
 	gotoxy(x - 4 + 22 - 3, y + 13);		 cout << "oooooo     oooooo";
 	gotoxy(x - 4 + 22 - 3, y + 14);		 cout << "oooooo     oooooo";
 	gotoxy(x - 4 + 22 - 3, y + 15);		 cout << "oooooo     oooooo";
-	
+	SetConsoleTextAttribute(hConsoleColor, 9);
 	gotoxy(x + 33, y + 4);			cout << "ooooo   ooooooooo";
 	gotoxy(x + 33, y + 5);			cout << "oooooooooooooooooo";
 	gotoxy(x + 33, y + 6);			cout << "ooooooooooooooooooo";
@@ -87,6 +88,7 @@ void PrintCaro()
 	gotoxy(x + 1 + 33, y + 13);		 cout << "ooooooo";
 	gotoxy(x + 1 + 33, y + 14);		 cout << "ooooooo";
 	gotoxy(x + 1 + 33, y + 15);		 cout << "ooooooo";
+	SetConsoleTextAttribute(hConsoleColor, 10);
 	gotoxy(x + 57, y + 4);					cout << "ooooooooooo";
 	gotoxy(x + 57 - 2, y + 5);			  cout << "ooooooooooooooo";
 	gotoxy(x + 57 - 3, y + 6);			 cout << "ooooooooooooooooo";
@@ -102,7 +104,7 @@ void PrintCaro()
 	
 	gotoxy(x + 57 - 2, y + 14);		  cout << "ooooooooooooooo";
 	gotoxy(x + 57, y + 15);				cout << "ooooooooooo";
-
+	SetConsoleTextAttribute(hConsoleColor, 15);
 }
 
 
@@ -146,24 +148,24 @@ void Draw(int pSize)
 			cout << "";
 		};
 	};
-	for (int i = 0; i <= pSize-1 ; i++) {
+	for (int i = 0; i <= pSize - 1; i++) {
 		for (int j = 0; j <= pSize; j++) {
-			gotoxy((LEFT + 4 * i), (TOP + 2 * j)+1);
+			gotoxy((LEFT + 4 * i), (TOP + 2 * j) + 1);
 			cout << "----";
 		};
 	};
-	for (int i = 0; i <= pSize-1; i++) {
-		for (int j = 0; j <= pSize-1; j++) {
-			gotoxy((LEFT + 4 * i)+2, (TOP + 2 * j)+1);
+	for (int i = 0; i <= pSize - 1; i++) {
+		for (int j = 0; j <= pSize - 1; j++) {
+			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 1);
 			cout << "|";
 			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 2);
 			cout << "|";
 		};
 	};
 	SetConsoleTextAttribute(hConsoleColor, 10);
-	for (int i = 0; i <=2* pSize; i++)
+	for (int i = 0; i <= 2 * pSize; i++)
 	{
-		gotoxy(51, TOP+i+1);
+		gotoxy(55, TOP + i + 1);
 		if ((i + 1) % 2 == 1)
 			cout << char(21);
 		else
@@ -171,7 +173,7 @@ void Draw(int pSize)
 	};
 	for (int i = 0; i < 4 * pSize; i++)
 	{
-		gotoxy(LEFT + i , 26);
+		gotoxy(LEFT + i, 28);
 		if (i % 2 == 0)
 			cout << char(29);
 		else
@@ -187,14 +189,19 @@ void Draw(int pSize)
 	};
 	for (int i = 0; i < 4 * pSize; i++)
 	{
-		gotoxy(LEFT + i , TOP);
+		gotoxy(LEFT + i, TOP);
 		if (i % 2 == 0)
 			cout << char(5);
 		else
 			cout << char(127);
 
 	}
-
+	SetConsoleTextAttribute(hConsoleColor, 15);
+	for (int i = 0; i < 3 * pSize - 11; i++)
+	{
+		gotoxy(65, i + 1);
+		cout << "||";
+	}
 };
 
 int Checkboard(int pX, int pY) 
@@ -609,6 +616,7 @@ int _SelectCmd()
 
 int main()
 {
+	FixConsoleWindow();
 	int k = 0, k1 = 0;
 	do
 	{
