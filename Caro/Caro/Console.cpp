@@ -1,8 +1,9 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include<iostream>
 #include<Windows.h>
 #include <conio.h>
 #include <mmsystem.h>
-#include"Function.h"
+#include <string>
 
 using namespace std;
 #pragma comment(lib, "winmm.lib")
@@ -23,6 +24,14 @@ bool TURN = TRUE;
 char _COMMAND, check;
 int _X, _Y, countPlayer1 = 0, countPlayer2 = 0, count_win = 0, check_loop = 0;
 string A[] = { "New Game","Load Game","Instruction","ABout Us","Exit" };
+void gotoxy(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+};
+
 
 void ShowCur(bool CursorVisibility)
 {
@@ -33,6 +42,129 @@ void ShowCur(bool CursorVisibility)
 	ConCurInf.bVisible = CursorVisibility;
 
 	SetConsoleCursorInfo(handle, &ConCurInf);
+};
+
+void Reset() 
+{
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int j = 0; j < BOARD_SIZE; j++) {
+			_A[i][j].x = 4 * j + LEFT + 2;
+			_A[i][j].y = 2 * i + TOP + 1;
+			_A[i][j].c = 0;
+		}
+	}
+	TURN = true;
+	_COMMAND = -1;
+	_X = _A[0][0].x;
+	_Y = _A[0][0].y;
+};
+
+
+
+void FixConsoleWindow() 
+{
+	HWND consoleWindow = GetConsoleWindow();
+	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
+	SetWindowLong(consoleWindow, GWL_STYLE, style);
+};
+
+void Draw(int pSize) 
+{
+	SetConsoleTextAttribute(hConsoleColor, 1);
+	for (int i = 0; i <= pSize; i++) {
+		for (int j = 0; j <= pSize; j++) {
+			gotoxy(LEFT + 4 * i, TOP + 2 * j);
+			cout << "";
+		};
+	};
+	for (int i = 0; i <= pSize - 1; i++) {
+		for (int j = 0; j <= pSize; j++) {
+			gotoxy((LEFT + 4 * i), (TOP + 2 * j) + 1);
+			cout << "----";
+		};
+	};
+	for (int i = 0; i <= pSize - 1; i++) {
+		for (int j = 0; j <= pSize - 1; j++) {
+			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 1);
+			cout << "|";
+			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 2);
+			cout << "|";
+		};
+	};
+	SetConsoleTextAttribute(hConsoleColor, 10);
+	for (int i = 0; i <= 2 * pSize; i++)
+	{
+		gotoxy(55, TOP + i + 1);
+		if ((i + 1) % 2 == 1)
+			cout << char(21);
+		else
+			cout << char(23);
+	};
+	for (int i = 0; i < 4 * pSize; i++)
+	{
+		gotoxy(LEFT + i, 28);
+		if (i % 2 == 0)
+			cout << char(29);
+		else
+			cout << char(3);
+	};
+	for (int i = 0; i < 2 * pSize; i++)
+	{
+		gotoxy(LEFT, TOP + i + 1);
+		if ((i + 1) % 2 == 1)
+			cout << char(21);
+		else
+			cout << char(23);
+	};
+	for (int i = 0; i < 4 * pSize; i++)
+	{
+		gotoxy(LEFT + i, TOP);
+		if (i % 2 == 0)
+			cout << char(5);
+		else
+			cout << char(127);
+
+	}
+	SetConsoleTextAttribute(hConsoleColor, 15);
+	for (int i = 0; i < 3 * pSize - 11; i++)
+	{
+		gotoxy(65, i + 1);
+		cout << "||";
+	}
+};
+void starGame() 
+{
+	system("cls");
+	Draw(BOARD_SIZE);
+	Reset();
+};
+
+int Checkboard(int pX, int pY) 
+{
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int j = 0; j < BOARD_SIZE; j++) {
+			if (_A[i][j].x == pX && _A[i][j].y == pY && _A[i][j].c == 0) {
+				if (TURN == true) {
+					_A[i][j].c = -1;
+					TURN = false;
+				}
+				else {
+					_A[i][j].c = 1;
+					TURN = true;
+				};
+				return _A[i][j].c;
+			}
+		}
+	}
+	return 0;
+};
+
+
+void _cout(int x, int y, string c)
+{
+	gotoxy(x, y);
+	cout << c;
 };
 void PrintCaro()
 {	
@@ -108,136 +240,6 @@ void PrintCaro()
 }
 
 
-void Reset() 
-{
-	for (int i = 0; i < BOARD_SIZE; i++) {
-		for (int j = 0; j < BOARD_SIZE; j++) {
-			_A[i][j].x = 4 * j + LEFT + 2;
-			_A[i][j].y = 2 * i + TOP + 1;
-			_A[i][j].c = 0;
-		}
-	}
-	TURN = true;
-	_COMMAND = -1;
-	_X = _A[0][0].x;
-	_Y = _A[0][0].y;
-};
-
-
-void starGame() 
-{
-	system("cls");
-	Draw(BOARD_SIZE);
-	Reset();
-};
-
-void FixConsoleWindow() 
-{
-	HWND consoleWindow = GetConsoleWindow();
-	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
-	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
-	SetWindowLong(consoleWindow, GWL_STYLE, style);
-};
-
-void Draw(int pSize) 
-{
-	SetConsoleTextAttribute(hConsoleColor, 1);
-	for (int i = 0; i <= pSize; i++) {
-		for (int j = 0; j <= pSize; j++) {
-			gotoxy(LEFT + 4 * i, TOP + 2 * j);
-			cout << "";
-		};
-	};
-	for (int i = 0; i <= pSize - 1; i++) {
-		for (int j = 0; j <= pSize; j++) {
-			gotoxy((LEFT + 4 * i), (TOP + 2 * j) + 1);
-			cout << "----";
-		};
-	};
-	for (int i = 0; i <= pSize - 1; i++) {
-		for (int j = 0; j <= pSize - 1; j++) {
-			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 1);
-			cout << "|";
-			gotoxy((LEFT + 4 * i) + 2, (TOP + 2 * j) + 2);
-			cout << "|";
-		};
-	};
-	SetConsoleTextAttribute(hConsoleColor, 10);
-	for (int i = 0; i <= 2 * pSize; i++)
-	{
-		gotoxy(55, TOP + i + 1);
-		if ((i + 1) % 2 == 1)
-			cout << char(21);
-		else
-			cout << char(23);
-	};
-	for (int i = 0; i < 4 * pSize; i++)
-	{
-		gotoxy(LEFT + i, 28);
-		if (i % 2 == 0)
-			cout << char(29);
-		else
-			cout << char(3);
-	};
-	for (int i = 0; i < 2 * pSize; i++)
-	{
-		gotoxy(LEFT, TOP + i + 1);
-		if ((i + 1) % 2 == 1)
-			cout << char(21);
-		else
-			cout << char(23);
-	};
-	for (int i = 0; i < 4 * pSize; i++)
-	{
-		gotoxy(LEFT + i, TOP);
-		if (i % 2 == 0)
-			cout << char(5);
-		else
-			cout << char(127);
-
-	}
-	SetConsoleTextAttribute(hConsoleColor, 15);
-	for (int i = 0; i < 3 * pSize - 11; i++)
-	{
-		gotoxy(65, i + 1);
-		cout << "||";
-	}
-};
-
-int Checkboard(int pX, int pY) 
-{
-	for (int i = 0; i < BOARD_SIZE; i++) {
-		for (int j = 0; j < BOARD_SIZE; j++) {
-			if (_A[i][j].x == pX && _A[i][j].y == pY && _A[i][j].c == 0) {
-				if (TURN == true) {
-					_A[i][j].c = -1;
-					TURN = false;
-				}
-				else {
-					_A[i][j].c = 1;
-					TURN = true;
-				};
-				return _A[i][j].c;
-			}
-		}
-	}
-	return 0;
-};
-
-void gotoxy(int x, int y)
-{
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-};
-
-void _cout(int x, int y, string c)
-{
-	gotoxy(x, y);
-	cout << c;
-};
-
 
 void MoveRight() 
 {
@@ -309,25 +311,6 @@ void event(int pX,int pY,char check)
     cout<<"Current Turn: "<<swap_turn;
   };
 
-/*void check_win(int pX, int pY,int value)
-{
-	bool temp = false;
-	int x = pX, y = pY;
-	for (int i = pX; i < BOARD_SIZE; i++)
-	{
-		if (_A[i][y].c == -1) count_win++;
-	 }
-	for (int i = pX; i > 0; i--)
-	{
-		if (_A[i][y].c == -1) count_win++;
-	};
-	if (count_win == 6) temp = true;
-	if (temp == true) {
-		gotoxy(80, 7);
-		cout << count_win;
-	}
-	else count_win = 0;
-};*/
 void about_us()
 {
 	int q=0;
@@ -336,9 +319,34 @@ void about_us()
 	{
 		_cout(50, 15, "20120354   DANG HUYNH CUU QUAN");
 		_COMMAND = toupper(_getch());
-		if (_COMMAND == 27) q = 1;
+		if ((_COMMAND == 27) or (_COMMAND == 13)) q = 1;
 	} while (q != 1);
 	
+}
+int save_Game()
+{
+	char fsave[100];
+	system("cls");
+	gotoxy(50, 50);
+	cout << "Nhap ten file save : ";
+	cin >> fsave;
+//	char link[50] = "/SavedGame/";
+//	strcat(link , fsave);
+//	strcat(link, ".txt");
+	strcat(fsave, ".txt");
+	FILE* fp = fopen(fsave, "wt");
+
+	
+		fprintf(fp, "%d", BOARD_SIZE);
+		for (int i = 0; i <= BOARD_SIZE; i++)
+		{
+			for (int j = 0; j <= BOARD_SIZE; j++)
+				fprintf(fp, "%d", _A[i][j].c);
+		}
+		fprintf(fp, "%d", TURN);
+	
+	fclose(fp);
+	return 1;
 }
 
 int run() {
@@ -363,7 +371,7 @@ int run() {
 		_COMMAND = toupper(_getch());
 		if (_COMMAND == 27)
 		{
-			return 1;
+			return save_Game();
 			break;
 		}
 		else {
@@ -396,7 +404,6 @@ int run() {
 				{
 				case -1:
 						event(_X, _Y, 'X');
-//	check_win((_Y - 2) / 2, (_X - 5) / 4, _A[(_Y - 2) / 2][(_X - 5) / 4].c);
 
 						break;
 				case 1: 
@@ -610,7 +617,6 @@ int _SelectCmd()
 	}
 	return 0;
 };
-
 
 
 
